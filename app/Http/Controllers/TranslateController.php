@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\DictonariesOxfordService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\HistoryController;
 
 class TranslateController extends Controller
 {
@@ -19,11 +20,20 @@ class TranslateController extends Controller
         // return response()->json(['error' => '', 'data' => $translate]);
 
         try {
-            $translate = DictonariesOxfordService::translate($request->word, $request->fromLang ?? 'en', $request->toLang ?? 'ru');
-            return response()->json(['error' => '', 'data' => $translate]);
-        } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage(), 'data' => ''], $th->getCode());
-        }
 
+            $translate = (array) DictonariesOxfordService::translate($request->word, $request->fromLang ?? 'en', $request->toLang ?? 'ru');
+            // if (!empty($translate->message)) {
+            //     return response()->json(['error' => $translate->message, 'data' => '']);
+            // } else {
+
+            $addRes = HistoryController::store($translate, $request->toLang);
+            // dd(['$addRes',$addRes]);
+
+            return response()->json(['error' => '', 'data' => $translate]);
+
+            // }
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage(), 'data' => ''], ($th->getCode() > 0 ? $th->getCode() : 400));
+        }
     }
 }

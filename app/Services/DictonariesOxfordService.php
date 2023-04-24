@@ -23,6 +23,7 @@ class DictonariesOxfordService
         // $url = "https://od-api.oxforddictionaries.com/api/v2/translations/en/es/" . $word;
         // $url = "https://od-api.oxforddictionaries.com/api/v2/translations/en/es/" . $word;
         // $url = "https://od-api.oxforddictionaries.com/api/v2/translations/en/ru/" . $word;
+
         $return['url'] =
             $url = 'https://od-api.oxforddictionaries.com/api/v2/translations/' . $from . '/' . $to . '/' . $word;
         $return['header'] =
@@ -38,6 +39,8 @@ class DictonariesOxfordService
 
         $response = curl_exec($ch);
 
+        // dd('$response',$response);
+
         // Проверяем наличие ошибок
         if (!curl_errno($ch)) {
             $info = curl_getinfo($ch);
@@ -52,14 +55,23 @@ class DictonariesOxfordService
         }
 
         // return [$return, $info, json_decode($response)];
-        $re = json_decode($response);
-        $re['info'] = $info;
+        // var_dump($response);
+        // die();
+
+        $re = json_decode($response,true);
+        // dd($re);
+        // var_dump($re); die();
+        // $re->info = $info ?? 'x';
+        $re['info'] = $info ?? 'x';
+        
+        // dd('$re', $re);
+
         return $re;
 
-        $result = json_decode($response);
-        $translated_words = $result->results[0]->lexicalEntries[0]->entries[0]->senses[0]->translations[0]->text;
+        // $result = json_decode($response);
+        // $translated_words = $result->results[0]->lexicalEntries[0]->entries[0]->senses[0]->translations[0]->text;
 
-        return $translated_words;
+        // return $translated_words;
     }
 
     public static function getWorld($word_id)

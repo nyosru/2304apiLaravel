@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\TranslateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +21,6 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::apiResource('translate', TranslateController::class )->only(['store']);
+Route::get('translate', [ TranslateController::class , 'store' ]);
+
+Route::apiResource('history', HistoryController::class )->only(['index']);
